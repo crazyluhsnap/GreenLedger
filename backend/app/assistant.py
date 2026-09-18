@@ -5,7 +5,7 @@ from app.rag import retrieve_context
 def ask_esg_assistant(
     question: str,
     company_id: str,
-    n_results: int = 5,
+    n_results: int = 12,
 ) -> dict:
     results = retrieve_context(
         query=question,

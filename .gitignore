@@ -91,6 +91,7 @@ vector_store/
 # ML / Model Cache
 # =========================
 
+.cache/
 huggingface/
 .huggingface/
 transformers_cache/

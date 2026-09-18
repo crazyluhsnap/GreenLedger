@@ -8,6 +8,7 @@ from app.csv_loader import load_csv
 from app.store import add_transactions, get_company_transactions, get_transactions, replace_company_transactions
 from app.report import generate_esg_report
 from app.indexer import index_report
+from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 
@@ -52,9 +53,20 @@ app = FastAPI(
     version="1.0.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class ChatRequest(BaseModel):
     question: str
-    n_results: int = 5
+    n_results: int = 12
 
 
 @app.get("/health")

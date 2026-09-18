@@ -6,13 +6,13 @@ client=TestClient(app)
 
 def test_health():
     response=client.get("/health")
-    
+
     assert response.status_code==200
     assert response.json()=={
         "status":"ok"
     }
-    
-    
+
+
 def test_analyze_transaction():
     response = client.post(
         "/transactions/analyze",
@@ -90,7 +90,7 @@ def test_batch_analyze_transactions():
     assert len(data) == 2
     assert data[0]["transaction_id"] == "TX001"
     assert data[1]["transaction_id"] == "TX002"
-    
+
 SAMPLE_TRANSACTIONS = [
     {
         "transaction_id": "TX001",
@@ -166,8 +166,8 @@ def test_unknown_company_returns_empty_trends():
 
     assert response.status_code == 200
     assert response.json() == []
-    
-    
+
+
 def test_upload_csv():
     csv_content = """transaction_id,timestamp,company_id,vendor_id,amount,currency,description,sector
 TX101,2026-09-01T10:00:00,COMP002,VEND001,250000,INR,Solar panel procurement,MANUFACTURING
@@ -207,7 +207,7 @@ def test_upload_csv_rejects_invalid_file():
     )
 
     assert response.status_code == 400
-    
+
 def test_upload_csv_persists_transactions():
     from app.store import clear_transactions, get_company_transactions
 
@@ -236,3 +236,15 @@ TX202,2026-09-02T11:00:00,COMP003,VEND002,100000,INR,Diesel transportation,MANUF
     assert len(stored) == 2
     assert stored[0].transaction_id == "TX201"
     assert stored[1].transaction_id == "TX202"
+
+def test_cors_headers():
+    response = client.options(
+        "/health",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
